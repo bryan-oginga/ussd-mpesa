@@ -11,20 +11,20 @@ ENV = os.getenv('DJANGO_ENV', 'development')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False').lower() in ['true', '1']
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS if host.strip()]
-
+env_allowed_hosts = os.getenv("ALLOWED_HOSTS")
+if env_allowed_hosts:
+    ALLOWED_HOSTS = env_allowed_hosts.split(",")  
+    
 INTASEND_PUBLISHABLE_KEY = os.getenv('INTASEND_PUBLISHABLE_KEY')
 INTASEND_SECRET_KEY = os.getenv('INTASEND_SECRET_KEY')
 
 DATABASE_URL = os.getenv('DATABASE_URL')
-if not DATABASE_URL:
-    raise ValueError('DATABASE_URL environment variable not set!')
 
 DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL)
+    "default": dj_database_url.config(
+        default=f"sqlite:///{os.path.join(os.path.dirname(__file__), 'db.sqlite3')}"
+    )
 }
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,9 +68,7 @@ TEMPLATES = [
     },
 ]
 
-DATABASES = {
-    'default': dj_database_url.config()
-}
+
 
 WSGI_APPLICATION = 'flexicash.wsgi.application'
 
