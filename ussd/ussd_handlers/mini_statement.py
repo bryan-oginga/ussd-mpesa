@@ -1,4 +1,4 @@
 
 
-def mini_statement(request, session_id, phone_number, text):
+def mini_statement_handler(request, session_id, phone_number, text):
     pass

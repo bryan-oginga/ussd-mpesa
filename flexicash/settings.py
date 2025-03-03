@@ -20,11 +20,18 @@ INTASEND_SECRET_KEY = os.getenv('INTASEND_SECRET_KEY')
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{os.path.join(os.path.dirname(__file__), 'db.sqlite3')}"
-    )
-}
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,7 +44,9 @@ INSTALLED_APPS = [
     'accounts',
     'mpesaexpress',
     'loanapplication',
+    
     'ussd',
+    'fleximembers',
 ]
 
 MIDDLEWARE = [
